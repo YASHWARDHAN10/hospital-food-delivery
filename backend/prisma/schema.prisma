@@ -1,0 +1,29 @@
+datasource db{
+    provider = "postgresql"
+    url      =env("DATABASE_URL")
+}
+generator client{
+    provider="prisma-client-js"
+}
+model Patient{
+    id        Int    @id @default(autoincrement())
+    name      String
+    age       Int
+    history   String?
+    dietChart DietChart[]
+    delivery  Delivery[]
+}
+model DietChart{
+    id        Int         @id @default(autoincrement())
+    patientId Int
+    mealType String
+    restrictions String?
+    patient     Patient    @relation(fields: [patientId],references:[id])
+}
+model Delivery{
+    id          Int      @id @default(autoincrement())
+    patientId   Int
+    status      String
+    timestamp   DateTime @default(now())
+    patient     Patient  @relation(fields: [patientId],references: [id])
+}
